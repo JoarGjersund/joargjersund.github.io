@@ -42,7 +42,7 @@
 
 
   <script src="touchwipe.js"></script>
-
+<script>window.ontouchstart = function(e){	e.preventDefault();	e.stopPropagation();}</script>
 
 </head>
 <body>
@@ -59,6 +59,10 @@
 
     setInterval(update, 200);
     var wd = w.getContext("2d");
+
+
+
+    }
 
     function update(){
       var size = w.width/10;
