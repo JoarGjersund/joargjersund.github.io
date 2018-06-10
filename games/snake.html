@@ -1,0 +1,99 @@
+<html>
+<head>
+  <style>
+  hml, body, div, canvas {
+    margin: 0;
+    padding: 0;
+  }
+  /* Mobile Styles */
+  @media only screen and (max-width: 400px) {
+    #gameWindow {
+      background-color: #ededed;
+      width: 100%;
+      height: 100%;
+      display: block;
+
+    }
+
+  }
+
+  /* Tablet Styles */
+  @media only screen and (min-width: 401px) and (max-width: 960px) {
+    #gameWindow {
+      background-color: #ededed;
+      width: 100%;
+      height: 100%;
+      display: block;
+
+    }
+  }
+  /* Desktop Styles */
+  @media only screen and (min-width: 961px) {
+
+    #gameWindow {
+      background-color: #ededed;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+  }
+  </style>
+
+
+  <script src="touchwipe.js"></script>
+
+
+</head>
+<body>
+  <center>
+    <canvas id=gameWindow></canvas>
+
+    <script>
+    var posx = 0;
+    var posy = 0;
+    var direction= "l";
+    var w = document.getElementById("gameWindow");
+    setInterval(update, 1);
+    var wd = w.getContext("2d");
+
+    wd.fillStyle = "#000000";
+
+
+    function update(){
+      w.width=window.innerWidth;
+      w.height=window.innerHeight;
+      wd.clearRect(0, 0, w.width, w.height);
+    //  wd.fillText(xDown, 1, 10);
+      if (direction == "l"){
+        posx++;
+      }
+      if (direction == "r"){
+        posx--;
+      }
+      if (direction == "d"){
+        posy++;
+      }
+      if (direction == "u"){
+        posy--;
+      }
+
+      wd.fillRect(posx,posy, 10, 10);
+      if (posx>w.width){
+        posx=0;
+      }
+      if (posx<0){
+        posx=w.width;
+      }
+      if (posy>w.height){
+        posy=0;
+      }
+      if (posy<0){
+        posy=w.height;
+      }
+    }
+
+  </script>
+
+</body>
+</html>
