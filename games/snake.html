@@ -50,47 +50,59 @@
     <canvas id=gameWindow></canvas>
 
     <script>
+
     var posx = 0;
     var posy = 0;
     var direction= "l";
     var w = document.getElementById("gameWindow");
-    setInterval(update, 1);
+
+
+    setInterval(update, 200);
     var wd = w.getContext("2d");
 
-    wd.fillStyle = "#000000";
-
-
     function update(){
+      var size = w.width/10;
+      var offset = w.width%10;
       w.width=window.innerWidth;
       w.height=window.innerHeight;
-      wd.clearRect(0, 0, w.width, w.height);
-    //  wd.fillText(xDown, 1, 10);
+
+
       if (direction == "l"){
-        posx++;
+        posx+=size
       }
       if (direction == "r"){
-        posx--;
+        posx-=size;
       }
       if (direction == "d"){
-        posy++;
+        posy+=size;
       }
       if (direction == "u"){
-        posy--;
+        posy-=size;
       }
 
-      wd.fillRect(posx,posy, 10, 10);
-      if (posx>w.width){
+      if (posx>w.width-size){
         posx=0;
       }
-      if (posx<0){
-        posx=w.width;
-      }
-      if (posy>w.height){
+
+      if (posy>w.height-size){
         posy=0;
       }
       if (posy<0){
-        posy=w.height;
+        posy=w.height-size;
       }
+      if (posx<0){
+        posx=w.width-size;
+      }
+
+
+      wd.fillStyle = "#"+((1<<24)*Math.random()|0).toString(16);
+
+
+    //  wd.clearRect(0, 0, w.width, w.height);
+      wd.fillText(direction, 1, 10);
+
+      wd.fillRect(posx,posy, size, size);
+
     }
 
   </script>
