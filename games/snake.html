@@ -42,7 +42,7 @@
 
 
   <script src="touchwipe.js"></script>
-<script>window.ontouchstart = function(e){	e.preventDefault();	e.stopPropagation();}</script>
+
 
 </head>
 <body>
@@ -51,28 +51,29 @@
 
     <script>
 
+    var bodyPart = [];
     var posx = 0;
     var posy = 0;
     var direction= "l";
     var w = document.getElementById("gameWindow");
-
+    var size = w.width/10;
+    var offset = w.width%10;
 
     setInterval(update, 200);
     var wd = w.getContext("2d");
 
+    grow();
+    function updatePosition(){
 
-
-    }
-
-    function update(){
-      var size = w.width/10;
-      var offset = w.width%10;
+      size = w.width/10;
+      offset = w.width%10;
       w.width=window.innerWidth;
       w.height=window.innerHeight;
 
+      wd.fillStyle = "#"+((1<<24)*Math.random()|0).toString(16);
 
       if (direction == "l"){
-        posx+=size
+        posx+=size;
       }
       if (direction == "r"){
         posx-=size;
@@ -98,18 +99,53 @@
         posx=w.width-size;
       }
 
+    }
 
-      wd.fillStyle = "#"+((1<<24)*Math.random()|0).toString(16);
+    function drawSprite(x, y){
 
 
-    //  wd.clearRect(0, 0, w.width, w.height);
-      wd.fillText(direction, 1, 10);
+      wd.fillRect(x,y, size, size);
 
-      wd.fillRect(posx,posy, size, size);
+
 
     }
 
+    function sprite(x, y){
+      this.x = x;
+      this.y = y;
+    }
+
+    function grow(){
+      bodyPart.push(new sprite(0, 0));
+    }
+
+    function update(){
+
+      updatePosition();
+    //  drawSprite(posx, posy);
+    //  var Sprite = new sprite(posx, posy);
+
+
+      for (i=bodyPart.length-1;i>0;i--){
+      bodyPart[i].x=bodyPart[i-1].x;
+      bodyPart[i].y=bodyPart[i-1].y;
+        drawSprite(bodyPart[i].x, bodyPart[i].y);
+      }
+
+      bodyPart[0].x = posx;
+      bodyPart[0].y = posy;
+
+      drawSprite(bodyPart[0].x, bodyPart[0].y);
+
+
+
+
+      wd.fillText(bodyPart.length, 10, 10);
+    }
+
   </script>
+
+  <button onclick="grow()">grow</button>
 
 </body>
 </html>
