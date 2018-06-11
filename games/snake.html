@@ -64,6 +64,8 @@
     var offset = w.width%10;
 
     setInterval(update, 200);
+
+    setInterval(newApple, 5000);
     var wd = w.getContext("2d");
 
     grow();
@@ -196,8 +198,6 @@
     }
 
   </script>
-
-  <button onclick="newApple();">grow</button>
 
 </body>
 </html>
