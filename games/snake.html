@@ -61,11 +61,11 @@
     var direction= "l";
     var w = document.getElementById("gameWindow");
     var size = w.width/10;
-    var offset = w.width%10;
+
 
     setInterval(update, 200);
 
-    setInterval(newApple, 5000);
+    setInterval(newApple, 1000);
     var wd = w.getContext("2d");
 
     grow();
@@ -82,12 +82,11 @@
     }
 
     function updatePosition(){
-
-
       w.width=window.innerWidth;
       w.height=window.innerHeight;
-      size = w.width/10;
-      offset = w.width%10;
+
+
+      size = Math.floor(Math.sqrt(w.width*w.height)/10);
 
       i = 0;
       j = 0;
@@ -126,10 +125,10 @@
         posy=0;
       }
       if (posy<0){
-        posy=w.height-size;
+        posy=possiblePositionsY[possiblePositionsY.length-1];
       }
       if (posx<0){
-        posx=w.width-size;
+        posx=possiblePositionsX[possiblePositionsX.length-1];
       }
 
     }
