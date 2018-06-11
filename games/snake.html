@@ -51,7 +51,11 @@
 
     <script>
 
+    var possiblePositionsX = [];
+    var possiblePositionsY = [];
+
     var bodyPart = [];
+    var apples = [];
     var posx = 0;
     var posy = 0;
     var direction= "l";
@@ -63,12 +67,39 @@
     var wd = w.getContext("2d");
 
     grow();
+
+
+
+    function apple(){
+
+      this.x = possiblePositionsX[Math.floor(Math.random()*possiblePositionsX.length)];
+      this.y = possiblePositionsY[Math.floor(Math.random()*possiblePositionsY.length)];
+    }
+    function newApple(){
+      apples.push(new apple());
+    }
+
     function updatePosition(){
 
-      size = w.width/10;
-      offset = w.width%10;
+
       w.width=window.innerWidth;
       w.height=window.innerHeight;
+      size = w.width/10;
+      offset = w.width%10;
+
+      i = 0;
+      j = 0;
+      possiblePositionsX = [];
+      possiblePositionsY = [];
+      while(i<w.width-size){
+        possiblePositionsX.push(i);
+        while (j<w.height-size){
+          possiblePositionsY.push(j);
+          j+=size;
+        }
+
+        i+=size;
+      }
 
       wd.fillStyle = "#"+((1<<24)*Math.random()|0).toString(16);
 
@@ -108,7 +139,9 @@
 
 
 
+
     }
+
 
     function sprite(x, y){
       this.x = x;
@@ -116,7 +149,7 @@
     }
 
     function grow(){
-      bodyPart.push(new sprite(0, 0));
+      bodyPart.push(new sprite(posx, posy));
     }
 
     function update(){
@@ -130,14 +163,33 @@
       bodyPart[i].x=bodyPart[i-1].x;
       bodyPart[i].y=bodyPart[i-1].y;
         drawSprite(bodyPart[i].x, bodyPart[i].y);
+
       }
 
       bodyPart[0].x = posx;
       bodyPart[0].y = posy;
 
+      for (i=1; i<bodyPart.length; i++){
+        if (bodyPart[0].x == bodyPart[i].x && bodyPart[0].y == bodyPart[i].y){
+          // collision.
+          bodyPart = [];
+          grow();
+        }
+      }
+
+      for (i=0;i<apples.length;i++){
+        if (bodyPart[0].x == apples[i].x && bodyPart[0].y == apples[i].y){
+          // eating apple.
+          grow();
+         apples.splice(i, 1);
+        }
+      }
+
       drawSprite(bodyPart[0].x, bodyPart[0].y);
 
-
+      for (i=0;i<apples.length-1;i++){
+        wd.fillRect(apples[i].x,apples[i].y, size, size);
+      }
 
 
       wd.fillText(bodyPart.length, 10, 10);
@@ -145,7 +197,7 @@
 
   </script>
 
-  <button onclick="grow()">grow</button>
+  <button onclick="newApple();">grow</button>
 
 </body>
 </html>
