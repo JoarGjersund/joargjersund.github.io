@@ -4,7 +4,7 @@
 window.onload="generateLabel()";
 
 
-generateLabel() {
+function generateLabel() {
 document.getElementById('qr-image').src="http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl=" + window.location.hash + "&chs=180x180&choe=UTF-8&chld=L|0";
 }
 </script>
