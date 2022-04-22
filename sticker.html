@@ -37,7 +37,7 @@ var parsed_qs = parse_query_string(window.location.search);
 var qr_link = parsed_qs.link;
 var info_sku = parsed_qs.sku;
 
-    var imageUrl = "http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl="+ qr_link+"&chs=180x180&choe=UTF-8&chld=L|0";
+    var imageUrl = "https://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl="+ qr_link+"&chs=180x180&choe=UTF-8&chld=L|0";
     document.getElementById('qr-image').src = imageUrl;
 
 
