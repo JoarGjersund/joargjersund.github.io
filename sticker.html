@@ -1,13 +1,54 @@
 <html>
 
 <script>
-window.onload="generateLabel()";
+
+// ?&link=QR_CODE_LINK&sku=SKU
 
 
-function generateLabel() {
-//document.getElementById('qr-image').src="http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl=" + window.location.hash + "&chs=180x180&choe=UTF-8&chld=L|0";
-document.getElementById('qr-image').src="/old/gfx/1.jpg";
+function parse_query_string(query) {
+  var vars = query.split("&");
+  var query_string = {};
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    var key = decodeURIComponent(pair.shift());
+    var value = decodeURIComponent(pair.join("="));
+    // If first entry with this name
+    if (typeof query_string[key] === "undefined") {
+      query_string[key] = value;
+      // If second entry with this name
+    } else if (typeof query_string[key] === "string") {
+      var arr = [query_string[key], value];
+      query_string[key] = arr;
+      // If third or later entry with this name
+    } else {
+      query_string[key].push(value);
+    }
+  }
+  return query_string;
 }
+
+
+
+setTimeout(function(){
+
+
+var parsed_qs = parse_query_string(window.location.search);
+
+var qr_link = parsed_qs.link;
+var info_sku = parsed_qs.sku;
+
+    var imageUrl = "http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl="+ qr_link+"&chs=180x180&choe=UTF-8&chld=L|0";
+    document.getElementById('qr-image').src = imageUrl;
+
+
+
+
+	document.getElementById("sku").innerHTML = info_sku;
+}, 1);
+
 </script>
+<center>
 <img id="qr-image">
+<div id="sku" style="font-size:30"></p>
+</center>
 </html>
