@@ -102,7 +102,14 @@
     }
   </script>
 <script>
-  const openaiApiKey = 'YOUR_OPENAI_API_KEY'; // <-- REPLACE with your actual key (not for production use)
+
+  // Extract OpenAI API key from URL query string
+function getApiKeyFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('api_key');
+}
+
+const openaiApiKey = getApiKeyFromUrl();
 
   async function getInterestingFacts(placeName) {
     const prompt = `Give 3 interesting facts about ${placeName}.`;
