@@ -101,6 +101,100 @@
       });
     }
   </script>
+<script>
+  const openaiApiKey = 'YOUR_OPENAI_API_KEY'; // <-- REPLACE with your actual key (not for production use)
+
+  async function getInterestingFacts(placeName) {
+    const prompt = `Give 3 interesting facts about ${placeName}.`;
+
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openaiApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: "gpt-4",
+          messages: [
+            { role: "system", content: "You are a helpful assistant that provides fun and educational facts." },
+            { role: "user", content: prompt }
+          ],
+          temperature: 0.7
+        })
+      });
+
+      const data = await response.json();
+      const message = data.choices?.[0]?.message?.content;
+      return message || "No facts found.";
+    } catch (error) {
+      console.error('Error fetching facts:', error);
+      return "Could not retrieve interesting facts.";
+    }
+  }
+
+  async function getAddressFromCoordinates(lat, lon) {
+    const baseUrl = 'https://nominatim.openstreetmap.org/reverse';
+    const params = new URLSearchParams({
+      format: 'json',
+      lat: lat,
+      lon: lon,
+      zoom: 18,
+      addressdetails: 1
+    });
+
+    try {
+      const response = await fetch(`${baseUrl}?${params.toString()}`, {
+        headers: {
+          'User-Agent': 'WebAppGPS/1.0 (your@email.com)'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const address = data.address || {};
+      const placeName = address.city || address.town || address.village || address.county || address.state || address.country || 'Unknown location';
+
+      return {
+        full: data.display_name || placeName,
+        placeName
+      };
+    } catch (error) {
+      console.error('Failed to retrieve address:', error);
+      return {
+        full: 'Unknown location',
+        placeName: 'Unknown'
+      };
+    }
+  }
+
+  function getLocation() {
+    const output = document.getElementById('output');
+    output.textContent = 'Getting location...';
+
+    if (!navigator.geolocation) {
+      output.textContent = 'Geolocation is not supported by your browser.';
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const { latitude, longitude } = position.coords;
+      output.textContent = `Coordinates: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}\nLooking up address...`;
+
+      const addressInfo = await getAddressFromCoordinates(latitude, longitude);
+
+      output.textContent = `Coordinates: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}\nAddress: ${addressInfo.full}\nFetching facts about ${addressInfo.placeName}...`;
+
+      const facts = await getInterestingFacts(addressInfo.placeName);
+      output.textContent += `\n\nInteresting Facts:\n${facts}`;
+    }, (error) => {
+      output.textContent = `Error getting location: ${error.message}`;
+    });
+  }
+</script>
 
 </body>
 </html>
